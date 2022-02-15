@@ -20,7 +20,7 @@ const createPlayer = (mark) => {
     resetWins,
   };
 };
-let sel = "";
+let sel = "X";
 while (1) {
   sel = prompt("Player 1 select X or O").toUpperCase();
   if (sel === "X" || sel === "O") {
