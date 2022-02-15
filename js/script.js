@@ -9,40 +9,113 @@ const createPlayer = (mark) => {
     return winCount;
   }
 
+  function resetWins() {
+    winCount = 0;
+  }
+
+  function getMark() {
+    return mark;
+  }
+
   return {
     mark,
     addWinPoint,
     getWins,
+    resetWins,
+    getMark,
   };
 };
 
-// Add text input for player mark
-let p1 = createPlayer("x");
-let p2 = createPlayer("o");
+let p1 = createPlayer("X");
+let p2 = createPlayer("O");
 
 // Assume 1st player always goes first
 let active = p1;
+let turnCount = 0;
 
 const gameBoard = (function () {
+  const currentPlayer = document.querySelector(".current-player");
   const _boardLength = 9;
   let pseudoBoard = Array(9).fill("");
   const _container = document.querySelector(".container");
-
-  let turnCount = 0;
-
-  function swapActivePlayer() {
-    active == p1 ? (active = p2) : (active = p1);
-  }
+  const totalScoreText = document.querySelector(".score");
 
   function addMarkToArray(index, mark) {
     pseudoBoard[index] = mark;
     turnCount++;
   }
 
-  function checkWinner() {
+  const _addEvent = function (square) {
+    square.addEventListener("click", (e) => {
+      if (square.innerText != "") {
+        return;
+      }
+      addMarkToArray(square.id - 1, active.mark);
+      square.innerText = active.mark;
+
+      if (turnCount > 4) {
+        game.checkWinner(pseudoBoard);
+      }
+      game.swapActivePlayer();
+      currentPlayer.innerText = `${active.mark} it's your turn`;
+    });
+  };
+
+  const renderWinner = (w) => {
+    const winner = document.querySelector(".winner");
+    winner.style.visibility = "visible";
+    if (w == "tie") {
+      winner.innerText = "Last round result: TIE";
+      return;
+    }
+    winner.innerText = `${w.mark.toUpperCase()} wins last round`;
+  };
+
+  const render = () => {
+    totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+    totalScoreText.style.visibility = "visible";
+    currentPlayer.style.visibility = "visible";
+    currentPlayer.innerText = `${active.mark} it's your turn`;
+
+    for (let i = 0; i < _boardLength; i++) {
+      const square = document.createElement("div");
+      square.className = "square";
+      _addEvent(square);
+      square.id = i + 1;
+
+      _container.appendChild(square);
+    }
+  };
+
+  function reset() {
+    const squares = document.querySelectorAll(".square");
+
+    squares.forEach((ele) => {
+      ele.remove();
+    });
+    pseudoBoard = Array(9).fill("");
+    turnCount = 0;
+    render();
+  }
+
+  return {
+    render,
+    reset,
+    turnCount,
+    totalScoreText,
+    renderWinner,
+  };
+})();
+
+const game = (function () {
+  function swapActivePlayer() {
+    active == p1 ? (active = p2) : (active = p1);
+  }
+
+  function checkWinner(pseudoBoard) {
     if (turnCount == 9) {
-      console.log("tie");
-      reset();
+      gameBoard.reset();
+      gameBoard.renderWinner("tie");
     }
     for (let i = 0, j = 0, g = 0; i < 9; i += 3, j++) {
       let col = [pseudoBoard[j], pseudoBoard[j + 3], pseudoBoard[j + 6]];
@@ -64,16 +137,10 @@ const gameBoard = (function () {
       ) {
         active.addWinPoint();
         // print winner
-        console.log("winner " + active.mark);
-        // print total score
-        console.log(
-          "Total score : Player1: " +
-            p1.getWins() +
-            ", Player2: " +
-            p2.getWins()
-        );
+        gameBoard.renderWinner(active);
         // reset desk
-        reset();
+        gameBoard.totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+        gameBoard.reset();
         break;
       }
     }
@@ -86,52 +153,36 @@ const gameBoard = (function () {
     return elements[0] === elements[2] && elements[0] === elements[1];
   }
 
-  const _addEvent = function (square) {
-    square.addEventListener("click", (e) => {
-      if (square.innerText != "") {
-        return;
-      }
-      console.log(active.mark);
-      addMarkToArray(square.id - 1, active.mark);
-      square.innerText = active.mark;
-
-      if (turnCount > 4) {
-        checkWinner();
-      }
-      console.log(turnCount);
-      swapActivePlayer();
-    });
-  };
-
-  const render = () => {
-    for (let i = 0; i < _boardLength; i++) {
-      const square = document.createElement("div");
-      square.className = "square";
-      _addEvent(square);
-      square.id = i + 1;
-
-      _container.appendChild(square);
-    }
-  };
-
-  function reset() {
-    const squares = document.querySelectorAll(".square");
-    active = p2;
-
-    squares.forEach((ele) => {
-      ele.remove();
-    });
-    pseudoBoard = Array(9).fill("");
-    turnCount = 0;
-    render();
-  }
-
   return {
-    render,
+    swapActivePlayer,
+    checkWinner,
   };
 })();
 
-const game = (function () {
-  const play = function () {};
+const buttons = (function () {
+  const restart = document.querySelector(".restart");
+  const resetScore = document.querySelector(".reset-score");
+
+  function addEvent() {
+    restart.addEventListener("click", () => {
+      gameBoard.reset();
+      const winner = document.querySelector(".winner");
+      winner.style.visibility = "hidden";
+    });
+    resetScore.addEventListener("click", () => {
+      gameBoard.reset();
+      p1.resetWins();
+      p2.resetWins();
+      const winner = document.querySelector(".winner");
+      winner.style.visibility = "hidden";
+
+      gameBoard.totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+    });
+  }
+  return {
+    addEvent,
+  };
 })();
+
+buttons.addEvent();
 gameBoard.render();

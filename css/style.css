@@ -7,32 +7,146 @@
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --backgorund-color: #f5f7fa;
+  --header-blue: #19216c;
+  --header-white: #f5f7fa;
+  --header-shadow: #98aeeb;
+  --button-main: #1cd4d4;
+  --button-shadow: #92fdf2;
+  --button-text: #f5f7fa;
+  --square-main: #3e4c59;
+  --gray: #1f2933;
+}
+
+.buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  grid-row: 3;
+}
+
+button {
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  background-color: var(--button-main);
+  color: var(--button-text);
+}
+button:hover {
+  box-shadow: 3px 5px 10px var(--button-shadow);
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 100vh;
+  background-color: var(--backgorund-color);
+  min-height: 100vh;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 50px;
+  background-color: var(--header-blue);
+  font-size: 3rem;
+  padding: 20px;
+  color: var(--header-white);
+  box-shadow: 0px 5px 15px var(--header-shadow);
 }
 
 .container {
-  flex: 1 1 auto;
-  max-width: 500px;
-  height: 50vh;
-  background-color: rgb(212, 205, 205);
-
+  grid-row: 2;
+  margin: 0 auto;
+  margin-top: 5%;
+  max-width: 40vw;
+  min-height: 50vh;
+  border: 4px solid var(--button-main);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  box-shadow: 10px 10px 10px var(--square-main);
 }
 
 .square {
-  border: 1px solid black;
+  border: 2px solid var(--button-main);
+  background-color: var(--square-main);
+  color: var(--button-text);
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 5.5rem;
+}
 
-  font-size: 4.5rem;
+.git {
+  position: fixed;
+  right: 10%;
+  bottom: 50%;
+}
+
+.score {
+  visibility: hidden;
+}
+
+.winner {
+  visibility: hidden;
+}
+
+ion-icon {
+  font-size: 50px;
+}
+
+a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+a:link {
+  color: var(--gray);
+}
+a:visited {
+  color: var(--gray);
+}
+
+a:hover {
+  font-size: 1.1rem;
+  color: var(--square-main);
+}
+
+a:active {
+  color: var(--button-main);
+}
+
+.score,
+.winner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score {
+  color: var(--header-blue);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.winner {
+  margin-top: 15px;
+  font-size: 2rem;
+  color: var(--gray);
+  font-weight: 500;
+  margin-bottom: -3%;
+  position: fixed;
+  right: 5%;
+  bottom: 80%;
+}
+
+.current-player {
+  visibility: hidden;
+  position: fixed;
+  right: 10%;
+  bottom: 70%;
+  color: var(--gray);
+  font-size: 1.2rem;
 }
