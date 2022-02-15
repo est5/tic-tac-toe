@@ -140,9 +140,7 @@ const game = (function () {
         checkSetOfThree(revDiag)
       ) {
         active.addWinPoint();
-        // print winner
         gameBoard.renderWinner(active);
-        // reset desk
         gameBoard.totalScoreText.innerText = `P1 (${
           p1.mark
         }): ${p1.getWins()} wins , P2 (${p2.mark}): ${p2.getWins()} wins`;
