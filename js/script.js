@@ -22,7 +22,11 @@ const createPlayer = (mark) => {
 };
 let sel = "X";
 while (1) {
-  sel = prompt("Player 1 select X or O").toUpperCase();
+  sel = prompt("Player 1 select X or O");
+  if (sel === null) {
+    sel = "X";
+  }
+  sel = sel.toUpperCase();
   if (sel === "X" || sel === "O") {
     break;
   }
