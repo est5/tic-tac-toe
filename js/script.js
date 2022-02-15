@@ -13,21 +13,23 @@ const createPlayer = (mark) => {
     winCount = 0;
   }
 
-  function getMark() {
-    return mark;
-  }
-
   return {
     mark,
     addWinPoint,
     getWins,
     resetWins,
-    getMark,
   };
 };
+let sel = "";
+while (1) {
+  sel = prompt("Player 1 select X or O").toUpperCase();
+  if (sel === "X" || sel === "O") {
+    break;
+  }
+}
 
-let p1 = createPlayer("X");
-let p2 = createPlayer("O");
+let p1 = createPlayer(sel);
+let p2 = createPlayer(p1.mark === "X" ? "O" : "X");
 
 // Assume 1st player always goes first
 let active = p1;
@@ -57,7 +59,7 @@ const gameBoard = (function () {
         game.checkWinner(pseudoBoard);
       }
       game.swapActivePlayer();
-      currentPlayer.innerText = `${active.mark} it's your turn`;
+      currentPlayer.innerText = `'${active.mark}' your turn`;
     });
   };
 
@@ -68,14 +70,16 @@ const gameBoard = (function () {
       winner.innerText = "Last round result: TIE";
       return;
     }
-    winner.innerText = `${w.mark.toUpperCase()} wins last round`;
+    winner.innerText = `${w.mark.toUpperCase()} won last round`;
   };
 
   const render = () => {
-    totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+    totalScoreText.innerText = `P1 (${p1.mark}): ${p1.getWins()} wins , P2 (${
+      p2.mark
+    }): ${p2.getWins()} wins`;
     totalScoreText.style.visibility = "visible";
     currentPlayer.style.visibility = "visible";
-    currentPlayer.innerText = `${active.mark} it's your turn`;
+    currentPlayer.innerText = `'${active.mark}' your turn`;
 
     for (let i = 0; i < _boardLength; i++) {
       const square = document.createElement("div");
@@ -139,7 +143,9 @@ const game = (function () {
         // print winner
         gameBoard.renderWinner(active);
         // reset desk
-        gameBoard.totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+        gameBoard.totalScoreText.innerText = `P1 (${
+          p1.mark
+        }): ${p1.getWins()} wins , P2 (${p2.mark}): ${p2.getWins()} wins`;
         gameBoard.reset();
         break;
       }
@@ -176,13 +182,14 @@ const buttons = (function () {
       const winner = document.querySelector(".winner");
       winner.style.visibility = "hidden";
 
-      gameBoard.totalScoreText.innerText = `P1: ${p1.getWins()} wins , P2: ${p2.getWins()} wins`;
+      gameBoard.totalScoreText.innerText = `P1 (${
+        p1.mark
+      }): ${p1.getWins()} wins , P2 (${p2.mark}): ${p2.getWins()} wins`;
     });
   }
   return {
     addEvent,
   };
 })();
-
 buttons.addEvent();
 gameBoard.render();

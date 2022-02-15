@@ -150,3 +150,17 @@ a:active {
   color: var(--gray);
   font-size: 1.2rem;
 }
+
+.pick {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: #1f2933;
+  color: #f5f7fa;
+  min-width: 900px;
+  min-height: 200px;
+  border-radius: 20px;
+}
